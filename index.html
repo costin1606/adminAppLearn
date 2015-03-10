@@ -6,6 +6,7 @@
 	<script>
 	var clients = {};
 	var projects = {};
+	var employees = {};
 
 	function Client(id, name, country){
 		this.id = id;
@@ -17,6 +18,14 @@
 		this.id = id;
 		this.name = name;
 		this.client = client;
+	}
+	
+	function Employee(id, firstname, lastname, gender, projectsList){
+		this.id = id;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.gender = gender;
+		this.projectsList = projectsList;
 	}
 	
 	function addClient(){
@@ -47,13 +56,50 @@
 	
 		var project = new Project(projectId,projectName,clients[projectClient]);
 		
-		projects[project.id]=project;
+		projects[projectId]=project;
 		
 		var table = document.getElementById("projectsTable");
 		var row = table.insertRow(1);
 			row.insertCell(0).innerHTML= project.id;
 			row.insertCell(1).innerHTML= project.name;
 			row.insertCell(2).innerHTML= project.client.name;
+			
+		var projectsSelect = document.getElementById("employeeProjects");
+		var option = document.createElement("option");
+		option.text = project.name;
+		option.value = project.id;
+		projectsSelect.add(option);
+	}
+	
+	function addEmployee(){
+		var employeeId = document.getElementById("employeeId").value;
+		var employeeFirstName = document.getElementById("employeeFirstName").value;
+		var employeeLastName = document.getElementById("employeeLastName").value;
+		var employeeGender = document.getElementById("employeeGender").value;
+		var select = document.getElementById("employeeProjects");
+		var employeeProjects = [];
+		for(var i=0;i<select.options.length;i++){
+			 if(select.options[i].selected ==true){
+				employeeProjects.push(projects[select.options[i].value]);
+			 }
+		}
+		
+		var employee = new Employee(employeeId,employeeFirstName,employeeLastName,employeeGender,employeeProjects);
+		employees[employeeId]=employee;
+		
+		var table = document.getElementById("employeeTable");
+		var row = table.insertRow(1);
+			row.insertCell(0).innerHTML= employee.id;
+			row.insertCell(1).innerHTML= employee.firstname;
+			row.insertCell(2).innerHTML= employee.lastname;
+			row.insertCell(3).innerHTML= employee.gender;
+			
+			var projectsNames = "";
+			for (var i = 0; i < employee.projectsList.length; i++) {
+				projectsNames += employee.projectsList[i].name + ";";
+				alert(projectsNames);
+			}
+			row.insertCell(4).innerHTML= projectsNames;
 	}
 
 	</script>
@@ -89,6 +135,28 @@
 	  </tr>
 	  <tr>
 		<td><button id="addProject" type="button" onclick="addProject()">+Add</button></td>
+	  </tr>
+	</table> 
+	
+	<hr/>
+	Employee table:
+	<table id="employeeTable">
+	  <tr>
+		<th>id</th>
+		<th>firstname</th>
+		<th>lastname</th>
+		<th>gender</th>
+		<th>projects</th>
+	  </tr>
+	  <tr>
+		<td><input id="employeeId" /></td>
+		<td><input id="employeeFirstName" /></td>
+		<td><input id="employeeLastName" /></td>
+		<td><input id="employeeGender" /></td>
+		<td><select multiple id="employeeProjects" /></td>
+	  </tr>
+	  <tr>
+		<td><button id="addEmployee" type="button" onclick="addEmployee()">+Add</button></td>
 	  </tr>
 	</table> 
 
