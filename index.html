@@ -28,47 +28,74 @@
 		this.projectsList = projectsList;
 	}
 	
+	function renderClientsTable(){
+		var table = document.getElementById("clientsTable");
+		table.innerHTML="<tbody><tr><th>id</th><th>name</th><th>country</th></tr>";
+		for (var property in clients) {
+			table.innerHTML+="<tr><td>"+clients[property].id+"</td><td>"+clients[property].name+"</td><td>"+clients[property].country+"</td></tr>";
+		}
+		table.innerHTML+="<tr><td><input id=\"clientId\" /></td><td><input id=\"clientName\" /></td><td><input id=\"clientCountry\"/></td></tr>";
+		table.innerHTML+="<tr><td><button id=\"addClient\" type=\"button\" onclick=\"addClient()\">+Add</button></td></tr></tbody>";
+	}
+	
+	function renderProjectsTable(){
+		var table = document.getElementById("projectsTable");
+		table.innerHTML="<tbody>"
+		table.innerHTML+="<tr><th>id</th><th>name</th><th>client</th></tr>";
+		for (var property in projects) {
+			table.innerHTML+="<tr><td>"+projects[property].id+"</td><td>"+projects[property].name+"</td><td>"+projects[property].client.name+"</td></tr>";
+		}
+		
+		var options="";
+		for (var property in clients) {
+			options+="<option value=\""+clients[property].id+"\">"+clients[property].name+"</option>";
+		}
+		table.innerHTML+="<tr><td><input id=\"projectId\" /></td><td><input id=\"projectName\" /></td><td><select id=\"projectClient\" size=\"1\">"+options+"</select></td></tr>";
+		
+		table.innerHTML+="<tr><td><button id=\"addProject\" type=\"button\" onclick=\"addProject()\">+Add</button></td></tr>";
+		table.innerHTML+="</tbody>";
+	}
+	
+	function renderEmployeeTable(){
+		var table = document.getElementById("employeeTable");
+		table.innerHTML="<tbody>"
+		table.innerHTML+=" <tr><th>id</th><th>firstname</th><th>lastname</th><th>gender</th><th>projects</th></tr>";
+		for (var property in employees) {
+			var projectsNames = "";
+			for (var i = 0; i < employees[property].projectsList.length; i++) {
+				projectsNames += employees[property].projectsList[i].name + ";";
+			}
+			table.innerHTML+="<tr><td>"+employees[property].id+"</td><td>"+employees[property].firstname+"</td><td>"+employees[property].lastname+"</td><td>"+employees[property].gender+"</td><td>"+projectsNames+"</td></tr>";
+		}
+		
+		var options="";
+		for (var property in projects) {
+			options+="<option value=\""+projects[property].id+"\">"+projects[property].name+"</option>";
+		}
+		table.innerHTML+="<tr><td><input id=\"employeeId\" /></td><td><input id=\"employeeFirstName\" /></td><td><input id=\"employeeLastName\" /></td><td><input id=\"employeeGender\" /></td><td><select multiple id=\"employeeProjects\" >"+options+"</select></td></tr>";
+		
+		table.innerHTML+="<tr><td><button id=\"addEmployee\" type=\"button\" onclick=\"addEmployee()\">+Add</button></td></tr>";
+		table.innerHTML+="</tbody>";
+	}
+	
 	function addClient(){
 		var clientId = document.getElementById("clientId").value;
 		var clientName = document.getElementById("clientName").value;
 		var clientCountry = document.getElementById("clientCountry").value;
+		clients[clientId]=new Client(clientId,clientName,clientCountry);
 		
-		var client = new Client(clientId,clientName,clientCountry);
-		clients[clientId]=client;
-
-		var table = document.getElementById("clientsTable");
-		var row = table.insertRow(1);
-			row.insertCell(0).innerHTML= client.id;
-			row.insertCell(1).innerHTML= client.name;
-			row.insertCell(2).innerHTML= client.country;
-			
-		var clientSelect = document.getElementById("projectClient");
-		var option = document.createElement("option");
-		option.text = client.name;
-		option.value = client.id;
-		clientSelect.add(option);
+		renderClientsTable();
+		renderProjectsTable();
 	}
 	
 	function addProject(){
 		var projectId = document.getElementById("projectId").value;
 		var projectName = document.getElementById("projectName").value;
 		var projectClient = document.getElementById("projectClient").value;
-	
-		var project = new Project(projectId,projectName,clients[projectClient]);
+		projects[projectId]=new Project(projectId,projectName,clients[projectClient]);
 		
-		projects[projectId]=project;
-		
-		var table = document.getElementById("projectsTable");
-		var row = table.insertRow(1);
-			row.insertCell(0).innerHTML= project.id;
-			row.insertCell(1).innerHTML= project.name;
-			row.insertCell(2).innerHTML= project.client.name;
-			
-		var projectsSelect = document.getElementById("employeeProjects");
-		var option = document.createElement("option");
-		option.text = project.name;
-		option.value = project.id;
-		projectsSelect.add(option);
+		renderProjectsTable();
+		renderEmployeeTable();
 	}
 	
 	function addEmployee(){
@@ -83,23 +110,9 @@
 				employeeProjects.push(projects[select.options[i].value]);
 			 }
 		}
+		employees[employeeId]=new Employee(employeeId,employeeFirstName,employeeLastName,employeeGender,employeeProjects);
 		
-		var employee = new Employee(employeeId,employeeFirstName,employeeLastName,employeeGender,employeeProjects);
-		employees[employeeId]=employee;
-		
-		var table = document.getElementById("employeeTable");
-		var row = table.insertRow(1);
-			row.insertCell(0).innerHTML= employee.id;
-			row.insertCell(1).innerHTML= employee.firstname;
-			row.insertCell(2).innerHTML= employee.lastname;
-			row.insertCell(3).innerHTML= employee.gender;
-			
-			var projectsNames = "";
-			for (var i = 0; i < employee.projectsList.length; i++) {
-				projectsNames += employee.projectsList[i].name + ";";
-				alert(projectsNames);
-			}
-			row.insertCell(4).innerHTML= projectsNames;
+		renderEmployeeTable();
 	}
 
 	</script>
