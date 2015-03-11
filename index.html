@@ -88,6 +88,7 @@
 			temporaryHtml+="<tr><td><button id=\"addClient\">+Add</button></td><td><input id=\"clientName\" /></td><td><input id=\"clientCountry\"/></td></tr></tbody>";
 			
 			table.innerHTML = temporaryHtml;
+			document.getElementById("addClient").addEventListener("click", addClient);
 		}
 		
 		function renderProjectsTable(){
@@ -105,6 +106,7 @@
 			temporaryHtml+="<tr><td><button id=\"addProject\">+Add</button></td><td><input id=\"projectName\" /></td><td><select id=\"projectClient\" size=\"1\">"+options+"</select></td></tr></tbody>";
 			
 			table.innerHTML = temporaryHtml;
+			document.getElementById("addProject").addEventListener("click", addProject);
 		}
 		
 		function renderEmployeeTable(){
@@ -126,9 +128,14 @@
 			temporaryHtml+="<tr><td><button id=\"addEmployee\">+Add</button></td><td><input id=\"employeeFirstName\" /></td><td><input id=\"employeeLastName\" /></td><td><input id=\"employeeGender\" /></td><td><select multiple id=\"employeeProjects\" >"+options+"</select></td></tr></tbody>";
 			
 			table.innerHTML = temporaryHtml;
+			document.getElementById("addEmployee").addEventListener("click", addEmployee);
 		}
 		
-		document.getElementById("addClient").addEventListener("click", function(){
+		document.getElementById("addClient").addEventListener("click", addClient);
+		document.getElementById("addProject").addEventListener("click", addProject);
+		document.getElementById("addEmployee").addEventListener("click", addEmployee);
+		
+		function addClient(){
 			var clientId = Object.keys(clients).length + 1;
 			var clientName = document.getElementById("clientName").value;
 			var clientCountry = document.getElementById("clientCountry").value;
@@ -136,9 +143,9 @@
 			
 			renderClientsTable();
 			renderProjectsTable();
-		});
+		}
 		
-		document.getElementById("addProject").addEventListener("click", function(){
+		function addProject(){
 			var projectId = Object.keys(projects).length + 1;
 			var projectName = document.getElementById("projectName").value;
 			var projectClient = document.getElementById("projectClient").value;
@@ -146,9 +153,9 @@
 			
 			renderProjectsTable();
 			renderEmployeeTable();
-		});
+		}
 		
-		document.getElementById("addEmployee").addEventListener("click", function(){
+		function addEmployee(){
 			var employeeId = Object.keys(employees).length + 1;
 			var employeeFirstName = document.getElementById("employeeFirstName").value;
 			var employeeLastName = document.getElementById("employeeLastName").value;
@@ -163,7 +170,7 @@
 			employees[employeeId]=new Employee(employeeId,employeeFirstName,employeeLastName,employeeGender,employeeProjects);
 			
 			renderEmployeeTable();
-		});
+		}
 	</script>
 </body>
 </html>
